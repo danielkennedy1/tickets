@@ -21,7 +21,8 @@ function NavBar() {
         <li>
           <Link to="/transfer-tickets">Transfer Tickets</Link>
         </li>
-        {walletInfo && (
+        {walletInfo ? 
+          (
           <li>
             <p>Wallet Address: {walletInfo.address} </p>
             <button
@@ -33,7 +34,13 @@ function NavBar() {
               Disconnect
             </button>
           </li>
-        )}
+        ) : 
+        (
+        <button>
+          <Link to="/connect-wallet">Connect Wallet</Link>
+        </button>
+        )
+        }
       </ul>
     </nav>
   )
