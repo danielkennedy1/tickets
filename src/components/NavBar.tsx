@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import {useWeb3 } from '../contexts/Web3Provider';
+import { useWeb3 } from '../contexts/Web3Provider';
 
 function NavBar() {
-  const { walletInfo, setWalletInfo} = useWeb3();
+  const { walletInfo, setWalletInfo } = useWeb3();
   return (
     <nav>
       <ul>
@@ -21,25 +21,25 @@ function NavBar() {
         <li>
           <Link to="/transfer-tickets">Transfer Tickets</Link>
         </li>
-        {walletInfo ? 
+        {walletInfo ?
           (
-          <li>
-            <p>Wallet Address: {walletInfo.address} </p>
-            <button
-              onClick={() => {
-                setWalletInfo(undefined);
-              }}
+            <li>
+              <p>Wallet Address: {walletInfo.address} </p>
+              <button
+                onClick={() => {
+                  setWalletInfo(undefined);
+                }}
 
-            >
-              Disconnect
+              >
+                Disconnect
+              </button>
+            </li>
+          ) :
+          (
+            <button>
+              <Link to="/connect-wallet">Connect Wallet</Link>
             </button>
-          </li>
-        ) : 
-        (
-        <button>
-          <Link to="/connect-wallet">Connect Wallet</Link>
-        </button>
-        )
+          )
         }
       </ul>
     </nav>

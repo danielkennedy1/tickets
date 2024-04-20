@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import Web3 from 'web3';
+import { Web3 } from 'web3';
 
 type WalletInfo = {
   address: string;
@@ -29,6 +29,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
         'https://sepolia.infura.io/v3/e374c9fa97b845919613c8136a345bac'
       );
       setWeb3(new Web3(provider));
+      console.log("web3 loaded")
     };
     loadWeb3();
   }, []);

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useWeb3 } from '../contexts/Web3Provider';
+import { ABI, ADDRESS } from '../assets/contract';
 
 const CheckBalance: React.FC = () => {
   const { web3, walletInfo } = useWeb3();
-  const [balance, setBalance] = useState<string>('');
+  const [ethBalance, setEthBalance] = useState<string>('');
+  const [ticketBalance, setTicketBalance] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-  const checkBalance = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const checkEthBalance = async () => {
     if (!web3) {
       alert('Web3 is not initialized.');
       return;
@@ -20,7 +21,7 @@ const CheckBalance: React.FC = () => {
       setLoading(true);
       const balanceInWei = await web3.eth.getBalance(walletInfo.address);
       const balanceInEth = web3.utils.fromWei(balanceInWei, 'ether');
-      setBalance(balanceInEth);
+      setEthBalance(balanceInEth);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching balance:', error);
@@ -29,16 +30,42 @@ const CheckBalance: React.FC = () => {
     }
   };
 
+  const getTicketsBalance = async () => {
+    if (!web3) {
+      alert('Web3 is not initialized.');
+      return;
+    }
+
+    const contract = new web3.eth.Contract(ABI as any, ADDRESS);
+    await contract
+      .methods
+      .balanceOf(walletInfo?.address)
+      .call()
+      .then((result: bigint) => {
+        console.log(result.toString());
+        setTicketBalance(result.toString());
+    });
+  }
+
+  const getBalances = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await getTicketsBalance();
+    await checkEthBalance();
+  }
+
   return (
     <div>
       <h1>Check My Balance</h1>
-      <form onSubmit={checkBalance}>
+      <form onSubmit={getBalances}>
        <button type="submit" disabled={loading}>
           {loading ? 'Loading...' : 'Check Balance'}
         </button>
       </form>
-      {balance && (
-        <p>Balance: {balance} ETH</p>
+      {ethBalance && (
+        <>
+          <p>Ethereum Balance: {ethBalance} ETH</p>
+          <p>Ticket Balance: {ticketBalance}</p>
+        </>
       )}
     </div>
   );
