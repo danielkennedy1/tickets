@@ -23,10 +23,7 @@ input::-webkit-inner-spin-button {
 .keystore-upload::before {
 content: 'Upload Keystore';
 }
-.keystore-upload::after {
-    content: '';
-}
 
 .keystore-upload {
-    @apply text-foreground py-2 px-10 rounded border border-foreground bg-background hover:bg-gray-300 hover:text-background cursor-pointer;
+    @apply text-foreground py-2 px-10 rounded border border-foreground bg-background hover:bg-gray-300 hover:text-background cursor-pointer w-fit;
 }

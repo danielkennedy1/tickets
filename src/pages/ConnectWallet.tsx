@@ -1,9 +1,11 @@
 import { useWeb3 } from '../contexts/Web3Provider'
+import React, { useState } from 'react'
 
 const ConnectWallet = () => {
-    const { web3, setWalletInfo } = useWeb3();
+  const { web3, walletInfo, setWalletInfo } = useWeb3();
+  const [showPrivateKey, setShowPrivateKey] = useState(false)
 
-    const loadKeystore = async (event: React.FormEvent) => {
+  const loadKeystore = async (event: React.FormEvent) => {
     event.preventDefault()
     const password = (document.getElementById('password') as HTMLInputElement).value
     const keystore = (document.getElementById('keystore') as HTMLInputElement).files?.[0]
@@ -34,17 +36,42 @@ const ConnectWallet = () => {
     reader.readAsText(keystore)
 
   }
-return (
-  <>
-    <div className="flex flex-col items-center justify-center pt-36">
-      <h1 className="text-3xl font-bold">Connect Wallet</h1>
-    </div>
-    <form onSubmit={loadKeystore} className="flex flex-col items-center mt-8">
-      <input id="password" type="password" placeholder="Enter wallet password"  className="border bg-background text-foreground border-gray-300 rounded-md px-4 py-2 mb-4" />
-      <input id="keystore" type="file" placeholder="Upload Keystore" accept=".json" className="mb-4 inline keystore-upload" />
-      <button type="submit" className="bg-primary text-white py-2 px-4 rounded-md">Connect</button>
-    </form>
-  </>
-)
+  return (
+    <>
+      {
+        walletInfo ? (
+          <>
+            <div className="flex flex-col items-center justify-center pt-36 w-screen">
+              <h1 className="text-3xl font-bold">Connected Wallet</h1>
+              <p className="mt-4 w-screen text-center">
+                <strong>Address:</strong> {walletInfo.address}
+                <br />
+                <span onMouseEnter={() => setShowPrivateKey(true)} onMouseLeave={() => setShowPrivateKey(false)}>
+                  <strong>Private Key:</strong> {showPrivateKey ? walletInfo.privateKey : "•".repeat(walletInfo.privateKey.length)}
+                </span>
+              </p>
+              <button
+                className="bg-primary text-white py-2 px-4 rounded-md mt-4"
+                onClick={() => setWalletInfo(undefined)}
+              >
+                Disconnect
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex flex-col items-center justify-center pt-36">
+              <h1 className="text-3xl font-bold">Connect Wallet</h1>
+            </div>
+            <form onSubmit={loadKeystore} className="flex flex-col items-center mt-8 w-screen">
+              <input id="keystore" type="file" placeholder="Upload Keystore" accept=".json" className="mb-4 inline keystore-upload" />
+              <input id="password" type="password" placeholder="Enter wallet password" className="border bg-background text-foreground border-gray-300 rounded-md px-4 py-2 mb-4" />
+              <button type="submit" className="bg-primary text-white py-2 px-4 rounded-md">Connect</button>
+            </form>
+          </>
+        )
+      }
+    </>
+  )
 }
 export default ConnectWallet;
