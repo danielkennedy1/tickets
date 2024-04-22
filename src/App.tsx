@@ -6,7 +6,7 @@ import CreateWallet from './pages/CreateWallet'
 import ConnectWallet from './pages/ConnectWallet'
 import { CheckBalance } from './pages/CheckBalance'
 import { BuyTickets } from './pages/BuyTickets'
-import { TransferTickets } from './pages/TransferTickets'
+import { RefundTickets } from './pages/RefundTickets'
 import { NotFound } from './pages/NotFound'
 import NavBar from './components/NavBar'
 
@@ -24,7 +24,7 @@ function App() {
             <Route path="/connect-wallet" element={<ConnectWallet/>} />
             <Route path="/check-balance" element={<CheckBalance/>} />
             <Route path="/buy-tickets" element={<BuyTickets/>} />
-            <Route path="/transfer-tickets" element={<TransferTickets/>} />
+            <Route path="/refund-tickets" element={<RefundTickets/>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

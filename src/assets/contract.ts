@@ -1,4 +1,4 @@
-export const ADDRESS = "0x7796302E0E8FcEc717491c84568967fAB32b1314";
+export const ADDRESS = "0x04AfE759f76042BE0eC0cA03971FaEE9B4240717";
 
 export const ABI = [
 	{
@@ -98,11 +98,6 @@ export const ABI = [
 	},
 	{
 		"inputs": [
-			{
-				"internalType": "address",
-				"name": "holder",
-				"type": "address"
-			},
 			{
 				"internalType": "uint256",
 				"name": "amount",

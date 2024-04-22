@@ -19,7 +19,7 @@ function NavBar() {
           <Link to="/buy-tickets">Buy Tickets</Link>
         </li>
         <li>
-          <Link to="/transfer-tickets">Transfer Tickets</Link>
+          <Link to="/refund-tickets">Refund Tickets</Link>
         </li>
         {walletInfo ?
           (
