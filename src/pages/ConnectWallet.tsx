@@ -24,7 +24,7 @@ const ConnectWallet = () => {
         if (event.target?.result === null) {
           throw new Error('Failed to read file')
         }
-        const keystore = JSON.parse(event.target.result as string)
+        const keystore = JSON.parse(event.target?.result as string)
         const wallet = await web3.eth.accounts.decrypt(keystore, password);
         setWalletInfo(wallet)
       } catch (error: any) {
@@ -36,14 +36,13 @@ const ConnectWallet = () => {
   }
 return (
   <>
-    <div>
-      <h1>Connect Wallet</h1>
+    <div className="flex flex-col items-center justify-center pt-36">
+      <h1 className="text-3xl font-bold">Connect Wallet</h1>
     </div>
-    <form onSubmit={loadKeystore}>
-      <input id="password" type="password" placeholder="Enter wallet password" />
-      <label htmlFor="keystore">Upload keystore file:</label>
-      <input id="keystore" type="file" placeholder="Upload keystore file" accept=".json"/>
-      <button type="submit">Connect</button>
+    <form onSubmit={loadKeystore} className="flex flex-col items-center mt-8">
+      <input id="password" type="password" placeholder="Enter wallet password"  className="border bg-background text-foreground border-gray-300 rounded-md px-4 py-2 mb-4" />
+      <input id="keystore" type="file" placeholder="Upload Keystore" accept=".json" className="mb-4 inline keystore-upload" />
+      <button type="submit" className="bg-primary text-white py-2 px-4 rounded-md">Connect</button>
     </form>
   </>
 )

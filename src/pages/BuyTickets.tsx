@@ -37,32 +37,34 @@ function BuyTickets() {
   }
   return (
     <>
+    <div className="flex flex-col items-center justify-center pt-36">
       {web3 && walletInfo ? (
         <>
-          <h1>
+          <h1 className="text-xl font-bold mb-4">
             Ticket price: 100 Wei
           </h1>
-          <form onSubmit={buyTickets}>
-            <h1>
+          <form onSubmit={buyTickets} className="flex flex-col items-center">
+            <h1 className="text-2xl font-bold mb-4">
               Buy Tickets
             </h1>
-            <input name="amount" type="number" placeholder="Number of tickets" />
-            <button type="submit">
+            <input name="amount" type="number" placeholder="Number of tickets" className="border bg-background text-foreground border-gray-300 rounded-md px-4 py-2 mb-4" />
+            <button type="submit" className="bg-primary text-white px-4 py-2 rounded-md">
               Buy
             </button>
           </form>
-          {loading && <h1>Loading...</h1>}
+          {loading && <h1 className="text-xl font-bold mt-4">Loading...</h1>}
         </>
       ) : (
-      <>
-        <h1>
+        <>
+        <h1 className="text-xl font-bold mb-4">
           No Wallet Connected
         </h1>
-        <button>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
           <Link to="/connect-wallet">Connect Wallet</Link>
         </button>
       </>
       )}
+      </div>
     </>
   )
 }

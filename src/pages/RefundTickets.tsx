@@ -36,32 +36,34 @@ function RefundTickets() {
 
   return (
     <>
-      {web3 && walletInfo ? (
-        <>
-          <h1>
-            Ticket price: 100 Wei
-          </h1>
-          <form onSubmit={refundTickets}>
-            <h1>
-              Refund Tickets
+      <div className="flex flex-col items-center justify-center pt-36">
+        {web3 && walletInfo ? (
+          <>
+            <form onSubmit={refundTickets} className="mt-4">
+              <h1 className="text-2xl font-bold">
+                Refund Tickets
+              </h1>
+              <p>
+                {walletInfo.address}
+              </p>
+              <input name="amount" type="number" placeholder="Number of tickets" className="border bg-background text-foreground border-gray-300 rounded-md px-4 py-2 mb-4" />
+              <button type="submit" className="mt-2 px-4 py-2 bg-primary text-white rounded">
+                Refund
+              </button>
+            </form>
+            {loading && <h1 className="mt-4">Loading...</h1>}
+          </>
+        ) : (
+          <>
+            <h1 className="text-xl font-bold">
+              No Wallet Connected
             </h1>
-            <input name="amount" type="number" placeholder="Number of tickets" />
-            <button type="submit">
-             Refund 
+            <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded">
+              <Link to="/connect-wallet">Connect Wallet</Link>
             </button>
-          </form>
-          {loading && <h1>Loading...</h1>}
-        </>
-      ) : (
-      <>
-        <h1>
-          No Wallet Connected
-        </h1>
-        <button>
-          <Link to="/connect-wallet">Connect Wallet</Link>
-        </button>
-      </>
-      )}
+          </>
+        )}
+      </div>
     </>
   );
 }

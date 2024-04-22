@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useWeb3 } from '../contexts/Web3Provider';
 import { ABI, ADDRESS } from '../assets/contract';
+import ConnectWalletButton from '../components/ConnectWalletButton';
 
 const CheckBalance: React.FC = () => {
   const { web3, walletInfo } = useWeb3();
@@ -42,7 +43,7 @@ const CheckBalance: React.FC = () => {
       .call()
       .then((result: bigint) => {
         setTicketBalance(result.toString());
-    });
+      });
   }
 
   const getBalances = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -52,19 +53,34 @@ const CheckBalance: React.FC = () => {
   }
 
   return (
-    <div>
-      <h1>Check My Balance</h1>
-      <form onSubmit={getBalances}>
-       <button type="submit" disabled={loading}>
-          {loading ? 'Loading...' : 'Check Balance'}
-        </button>
-      </form>
-      {ethBalance && (
+    <div className="flex flex-col items-center justify-center pt-36">
+      <h1 className="text-4xl font-bold mb-4">Check My Balance</h1>
+      {walletInfo ? (
+        <>
+          <p className="mb-2">Wallet Address: {walletInfo.address}</p>
+          <form onSubmit={getBalances}>
+            <button
+              className="bg-primary hover:bg-secondary text-white font-bold py-2 px-4 rounded"
+              type="submit"
+              disabled={loading}>
+              {loading ? 'Loading...' : 'Check Balance'}
+            </button>
+          </form>
+          {ethBalance && (
         <>
           <p>Ethereum (Sepolia) Balance: {ethBalance} Wei</p>
           <p>Ticket Balance: {ticketBalance}</p>
         </>
       )}
+        </>
+
+      ) : (
+        <>
+          <p className="mb-2">Connect your wallet to check your balance.</p>
+          <ConnectWalletButton />
+        </>
+      )}
+
     </div>
   );
 };

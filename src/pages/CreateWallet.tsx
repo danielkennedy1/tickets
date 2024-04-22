@@ -31,24 +31,53 @@ const CreateWallet: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Create a New Ethereum (Sepolia) Wallet</h1>
-      <button onClick={generateWallet} disabled={walletInfo != undefined} >Generate Wallet</button>
-      {walletInfo && (
-        <div>
-          <p><strong>Address:</strong> {walletInfo.address}</p>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter password to encrypt your wallet"
-          />
-          <button onClick={downloadKeystore} disabled={!password || downloading}>
-            {downloading ? 'Preparing Download...' : 'Download Keystore File'}
+    <>
+      <div className="flex flex-col items-center justify-center pt-36">
+        <h1 className="text-4xl font-bold mb-4">Create a New Ethereum (Sepolia) Wallet</h1>
+        {walletInfo ? (
+          <div className="mt-4">
+            <button
+                className="bg-primary text-foreground py-1 px-2 rounded inline"
+                onClick={() => {
+                  setWalletInfo(undefined); 
+                }}
+                >
+                Disconnect{""}
+              </button>
+              <p className='inline'> 
+                {" "}your current wallet before creating a new one.
+              </p>
+            <p className="mb-2">
+              <strong>Address:</strong> {walletInfo.address}
+            </p>
+            <input
+              className="border border-gray-300 rounded px-2 py-1 mb-2"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password to encrypt your wallet"
+            />
+            <button
+              className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
+                !password || downloading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              onClick={downloadKeystore}
+              disabled={!password || downloading}
+            >
+              {downloading ? 'Preparing Download...' : 'Download Keystore File'}
+            </button>
+          </div>
+        ) : (
+            <button
+            className="bg-primary hover:bg-secondary text-white font-bold py-2 px-4 rounded"
+            onClick={generateWallet}
+            disabled={walletInfo !== undefined}
+          >
+            Generate Wallet
           </button>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
 
