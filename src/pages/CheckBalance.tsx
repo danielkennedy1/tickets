@@ -20,8 +20,7 @@ const CheckBalance: React.FC = () => {
     try {
       setLoading(true);
       const balanceInWei = await web3.eth.getBalance(walletInfo.address);
-      const balanceInEth = web3.utils.fromWei(balanceInWei, 'ether');
-      setEthBalance(balanceInEth);
+      setEthBalance(balanceInWei.toString());
       setLoading(false);
     } catch (error) {
       console.error('Error fetching balance:', error);
@@ -42,7 +41,6 @@ const CheckBalance: React.FC = () => {
       .balanceOf(walletInfo?.address)
       .call()
       .then((result: bigint) => {
-        console.log(result.toString());
         setTicketBalance(result.toString());
     });
   }
@@ -63,7 +61,7 @@ const CheckBalance: React.FC = () => {
       </form>
       {ethBalance && (
         <>
-          <p>Ethereum Balance: {ethBalance} ETH</p>
+          <p>Ethereum (Sepolia) Balance: {ethBalance} Wei</p>
           <p>Ticket Balance: {ticketBalance}</p>
         </>
       )}

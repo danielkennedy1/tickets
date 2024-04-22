@@ -1,4 +1,5 @@
-export const ADDRESS = "0x84442aAd44791864195e755B7153E526D61fde2D";
+export const ADDRESS = "0x7796302E0E8FcEc717491c84568967fAB32b1314";
+
 export const ABI = [
 	{
 		"inputs": [
@@ -89,6 +90,13 @@ export const ABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "endSale",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -102,13 +110,6 @@ export const ABI = [
 			}
 		],
 		"name": "refundTicket",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "takeFunds",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -255,6 +256,19 @@ export const ABI = [
 				"internalType": "address",
 				"name": "",
 				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "ticketsForSale",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
