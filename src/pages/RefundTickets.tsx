@@ -19,7 +19,7 @@ function RefundTickets() {
     }
     const contract = new web3.eth.Contract(ABI, ADDRESS);
     const numberOfTickets = parseInt(event.currentTarget.amount.value);
-    const encodedABI = contract.methods.refundTicket(numberOfTickets).encodeABI(); // FIXME: renamed refundTicket to refundTickets in contract
+    const encodedABI = contract.methods.refundTickets(numberOfTickets).encodeABI();
     const tx = {
       from: walletInfo.address,
       to: ADDRESS,

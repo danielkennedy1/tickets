@@ -51,7 +51,7 @@ const CreateWallet: React.FC = () => {
               <strong>Address:</strong> {walletInfo.address}
             </p>
             <input
-              className="border border-gray-300 rounded px-2 py-1 mb-2"
+              className="border bg-background text-foreground border-gray-300 rounded-md px-4 py-2 mb-4"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
