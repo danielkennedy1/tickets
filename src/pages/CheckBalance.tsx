@@ -21,6 +21,7 @@ const CheckBalance: React.FC = () => {
     const [ethBalance, setEthBalance] = useState<string>('');
     const [ticketBalance, setTicketBalance] = useState<string>('');
     const [totalSupply, setTotalSupply] = useState<string>('');
+    const [patronAddress, setPatronAddress] = useState<string>('');
 
     const getIsUsher = async (contract: any) => {
         await contract.methods.usher().call().then(
@@ -71,6 +72,7 @@ const CheckBalance: React.FC = () => {
     };
 
     const getTicketsBalance = async (walletAddress: string) => {
+        setLoading(true)
         await contract
             .methods
             .balanceOf(walletAddress)
@@ -78,6 +80,7 @@ const CheckBalance: React.FC = () => {
             .then((result: any) => {
                 setTicketBalance(result.toString());
             });
+        setLoading(false)
     }
 
     const getMyBalances = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -87,16 +90,36 @@ const CheckBalance: React.FC = () => {
     }
 
     const getPatronBalance = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        getTicketsBalance((event.target as any).address.value);
+        event.preventDefault()
+        setPatronAddress((event.target as any).address.value.trim())
+        getTicketsBalance((event.target as any).address.value.trim())
     }
 
     const getTicketSales = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setLoading(true);
-        await getTotalSupply(contract);
-        await getTicketsBalance(walletInfo!.address);
-        setLoading(false);
+        event.preventDefault()
+        setLoading(true)
+        await getTotalSupply(contract)
+        await getTicketsBalance(walletInfo!.address)
+        setLoading(false)
+    }
+
+    const acceptTickets = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        const address = (event.target as any).address.value.trim()
+        const amount = parseInt((event.target as any).amount.value)
+        const encodedABI = contract.methods.acceptTickets(address, amount).encodeABI();
+        const tx = {
+            from: walletInfo!.address,
+            to: ADDRESS,
+            data: encodedABI,
+            gas: 2000000,
+            gasPrice: await web3!.eth.getGasPrice(),
+        };
+        const signedTx = await web3!.eth.accounts.signTransaction(tx, walletInfo!.privateKey);
+        setLoading(true)
+        await web3!.eth.sendSignedTransaction(signedTx.rawTransaction || '');
+        setLoading(false)
+        alert("Tickets accepted successfully!")
     }
 
     return (
@@ -137,14 +160,36 @@ const CheckBalance: React.FC = () => {
                                     />
                                     <button
                                         className="bg-primary hover:bg-secondary text-white font-bold py-2 px-4 rounded"
-                                        type="submit">
-                                        Check Balance
+                                        type="submit"
+                                        disabled={loading}
+                                    >
+                                        {loading ? 'Loading...' : 'Check Balance'}
                                     </button>
                                 </form>
                                 {ticketBalance && (
                                     <>
-                                        <p>Ticket Balance: {ticketBalance}</p>
-                                        <p>Do accept tickets as well</p>
+                                        <p>Ticket Balance of patron: {ticketBalance}</p>
+                                        <p>Accept tickets</p>
+                                        <form onSubmit={acceptTickets}>
+                                            <input
+                                                name="amount"
+                                                type="number"
+                                                placeholder="Number of tickets to accept"
+                                                className="border bg-background text-foreground border-gray-300 rounded-md px-4 py-2 mb-4"
+                                            />
+                                            <input
+                                                name="address"
+                                                type="hidden"
+                                                value={patronAddress}
+                                            />
+                                            <button
+                                                className="bg-primary hover:bg-secondary text-white font-bold py-2 px-4 rounded"
+                                                type="submit"
+                                                disabled={loading}
+                                                >
+                                                {loading ? 'Loading...' : 'Accept Tickets'}
+                                            </button>
+                                        </form>
                                     </>
                                 )}
                             </>
@@ -182,7 +227,7 @@ const CheckBalance: React.FC = () => {
                 )}
             </div>
         </>
-    );
-};
+    )
+}
 
 export { CheckBalance };

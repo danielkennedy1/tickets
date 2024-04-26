@@ -69,7 +69,7 @@ const CreateWallet: React.FC = () => {
           </div>
         ) : (
             <button
-            className="bg-primary hover:bg-secondary text-white font-bold py-2 px-4 rounded"
+            className="bg-primary hover:bg-secondary text-foreground py-1 px-2 rounded"
             onClick={generateWallet}
             disabled={walletInfo !== undefined}
           >
