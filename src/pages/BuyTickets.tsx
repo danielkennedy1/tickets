@@ -2,19 +2,21 @@ import { ABI, ADDRESS } from '../assets/contract';
 import { useWeb3 } from '../contexts/Web3Provider';
 import { useState } from 'react';
 import ConnectWalletButton from '../components/ConnectWalletButton';
+import ErrorMessage from '../components/ErrorMessage';
 
 function BuyTickets() {
     const { web3, walletInfo } = useWeb3();
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const buyTickets = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!web3) {
-            alert('Web3 is not initialized.');
+            setError('Web3 is not initialized.');
             return;
         }
         if (!walletInfo) {
-            alert('Connect your wallet first.');
+            setError('Connect your wallet first.');
             return;
         }
         const contract = new web3.eth.Contract(ABI as any, ADDRESS);
@@ -31,13 +33,17 @@ function BuyTickets() {
         };
         const signedTx = await web3.eth.accounts.signTransaction(tx, walletInfo.privateKey);
         setLoading(true);
-        await web3.eth.sendSignedTransaction(signedTx.rawTransaction || '');
-        setLoading(false);
+        await web3.eth.sendSignedTransaction(signedTx.rawTransaction || '')
+        .catch((error) => {
+            setError((error as any).message);
+        });
         alert('Tickets bought successfully!');
+        setLoading(false);
     }
     return (
         <>
             <div className="flex flex-col items-center justify-center pt-36">
+                {error && <ErrorMessage error={error} />}
                 {web3 && walletInfo ? (
                     <>
                         <h1 className="text-xl font-bold mb-4">
@@ -59,7 +65,6 @@ function BuyTickets() {
                         <h1 className="text-4xl font-bold mb-4">No Wallet Connected</h1>
                         <p className="mb-2">Connect your wallet to buy tickets.</p>
                         <ConnectWalletButton />
-
                     </>
                 )}
             </div>

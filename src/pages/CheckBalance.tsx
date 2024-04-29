@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useWeb3 } from '../contexts/Web3Provider';
 import ConnectWalletButton from '../components/ConnectWalletButton';
 import { ABI, ADDRESS } from '../assets/contract';
+import ErrorMessage from '../components/ErrorMessage';
 
 const CheckBalance: React.FC = () => {
     const { web3, walletInfo } = useWeb3();
@@ -22,6 +23,7 @@ const CheckBalance: React.FC = () => {
     const [ticketBalance, setTicketBalance] = useState<string>('');
     const [totalSupply, setTotalSupply] = useState<string>('');
     const [patronAddress, setPatronAddress] = useState<string>('');
+    const [error, setError] = useState<string>('');
 
     const getIsUsher = async (contract: any) => {
         await contract.methods.usher().call().then(
@@ -67,7 +69,7 @@ const CheckBalance: React.FC = () => {
             setLoading(false);
         } catch (error) {
             setLoading(false);
-            alert('Failed to fetch balance. Make sure the address is correct.');
+            setError((error as any).message);
         }
     };
 
@@ -79,6 +81,8 @@ const CheckBalance: React.FC = () => {
             .call()
             .then((result: any) => {
                 setTicketBalance(result.toString());
+            }).catch((error: any) => {
+                setError(error.message);
             });
         setLoading(false)
     }
@@ -117,14 +121,17 @@ const CheckBalance: React.FC = () => {
         };
         const signedTx = await web3!.eth.accounts.signTransaction(tx, walletInfo!.privateKey);
         setLoading(true)
-        await web3!.eth.sendSignedTransaction(signedTx.rawTransaction || '');
+        await web3!.eth.sendSignedTransaction(signedTx.rawTransaction || '').catch(
+            (error) => { 
+                setError((error as any).message) }
+        );
         setLoading(false)
-        alert("Tickets accepted successfully!")
     }
 
     return (
         <>
             <div className="flex flex-col items-center justify-center pt-36">
+                {error && ( <ErrorMessage error={error} /> )}
                 {walletInfo ? (
                     <>
                         {role === Role.Patron ? (
@@ -186,7 +193,7 @@ const CheckBalance: React.FC = () => {
                                                 className="bg-primary hover:bg-secondary text-white font-bold py-2 px-4 rounded"
                                                 type="submit"
                                                 disabled={loading}
-                                                >
+                                            >
                                                 {loading ? 'Loading...' : 'Accept Tickets'}
                                             </button>
                                         </form>

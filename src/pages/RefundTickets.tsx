@@ -2,19 +2,21 @@ import { useWeb3 } from '../contexts/Web3Provider';
 import { useState } from 'react';
 import { ABI, ADDRESS } from '../assets/contract';
 import ConnectWalletButton from '../components/ConnectWalletButton';
+import ErrorMessage from '../components/ErrorMessage';
 
 function RefundTickets() {
     const { web3, walletInfo } = useWeb3();
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const refundTickets = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!web3) {
-            alert('Web3 is not initialized.');
+            setError('Web3 is not initialized.');
             return;
         }
         if (!walletInfo) {
-            alert('Connect your wallet first.');
+            setError('Connect your wallet first.');
             return;
         }
         const contract = new web3.eth.Contract(ABI, ADDRESS);
@@ -29,14 +31,21 @@ function RefundTickets() {
         };
         const signedTx = await web3.eth.accounts.signTransaction(tx, walletInfo.privateKey);
         setLoading(true);
-        await web3.eth.sendSignedTransaction(signedTx.rawTransaction || '');
+        await web3.eth.sendSignedTransaction(signedTx.rawTransaction || '').then(
+            (receipt) => {
+                alert('Tickets refunded successfully.');
+                console.log(receipt);
+            }
+        ).catch((error) => {
+            setError((error as any).message);
+        });
         setLoading(false);
-        alert('Tickets refunded successfully!');
     }
 
     return (
         <>
             <div className="flex flex-col items-center justify-center pt-36">
+            {error && <ErrorMessage error={error} />}
                 {web3 && walletInfo ? (
                     <>
                         <form onSubmit={refundTickets} className="mt-4">
