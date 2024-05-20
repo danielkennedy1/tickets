@@ -1,11 +1,11 @@
 import '@testing-library/jest-dom';
 import { fireEvent, screen } from '@testing-library/react';
 import CreateWallet from '../pages/CreateWallet';
-import { renderWithContext } from '../test/testutils';
+import { renderWithDefaultContext } from '../test/testutils';
 
 test('CreateWallet generates wallet and displays wallet address', async () => {
     // Given
-    const { container } = renderWithContext(<CreateWallet />);
+    const { container } = renderWithDefaultContext(<CreateWallet />);
     const walletRegex = /0x[a-fA-F0-9]{40}/;
 
     // When

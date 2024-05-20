@@ -4,7 +4,7 @@ global.TextEncoder = TextEncoder;
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Web3 } from 'web3';
 
-type WalletInfo = {
+export type WalletInfo = {
   address: string;
   privateKey: string;
 };
@@ -16,7 +16,7 @@ type Web3ContextType = {
   setWalletInfo: (walletInfo: WalletInfo) => void;
 };
 
-const Web3Context = createContext<Web3ContextType | undefined>(undefined);
+export const Web3Context = createContext<Web3ContextType | undefined>(undefined);
 
 interface Web3ProviderProps {
   children: React.ReactNode;
