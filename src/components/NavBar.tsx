@@ -30,7 +30,11 @@ function NavBar() {
               <button
                 className="bg-primary text-foreground py-1 px-2 rounded"
                 onClick={() => {
-                  setWalletInfo(undefined); 
+                    try{
+                        setWalletInfo(undefined as any); 
+                    } catch (e) {
+                        // eh
+                    }
                 }}
                 >
                 Disconnect

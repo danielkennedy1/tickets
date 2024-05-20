@@ -1,3 +1,6 @@
+import { TextEncoder } from 'util';
+global.TextEncoder = TextEncoder;
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Web3 } from 'web3';
 
