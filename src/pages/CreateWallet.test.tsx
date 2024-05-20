@@ -1,15 +1,7 @@
 import '@testing-library/jest-dom';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import CreateWallet from '../pages/CreateWallet';
-import { Web3Provider } from '../contexts/Web3Provider';
-
-const renderWithContext = (component: JSX.Element) => {
-    return render(
-        <Web3Provider>
-            {component}
-        </Web3Provider>
-    );
-}
+import { renderWithContext } from '../test/testutils';
 
 test('CreateWallet generates wallet and displays wallet address', async () => {
     // Given
