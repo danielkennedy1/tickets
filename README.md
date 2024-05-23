@@ -1,3 +1,21 @@
+# Ticketing DApp
+## Daniel Kennedy 22340017
+## CS4455 - Ethical Hacking and security
+
+## Running instructions
+(Requires Node.js and npm installed)
+
+Install dependencies
+```bash
+npm install
+```
+
+Run the development server
+```bash
+npm run dev
+```
+
+## Src folder structure
 ```bash
 src/
 │   App.tsx
