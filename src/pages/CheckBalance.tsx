@@ -36,7 +36,7 @@ const CheckBalance: React.FC = () => {
         Patron = 'Patron',
     }
 
-    // shshshsh
+    // Lots of state variables for this page
     const [loading, setLoading] = useState<boolean>(false);
 
     const [contract, setContract] = useState<any>(null);

@@ -1,30 +1,30 @@
-# React + TypeScript + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+src/
+│   App.tsx
+│   main.tsx
+│
+├───assets
+│       contract.ts # Stores ABI and Address of contract
+│
+├───components
+│       ErrorMessage.tsx       
+│       NavBar.test.tsx # Test wallet connection state awareness of navbar
+│       NavBar.tsx # Top of screen across site, common to all pages
+│
+├───contexts
+│       Web3Provider.tsx # Context provider for web3 instance and wallet details
+│
+├───pages
+│       BuyTickets.tsx # Page for buying tickets
+│       CheckBalance.test.tsx # Test for CheckBalance page (+ Role-based access unit tests)
+│       CheckBalance.tsx # Patron: check balance, Organiser: check distribution, Usher: accept tickets
+│       ConnectWallet.tsx # Page for connecting wallet from keystore file
+│       CreateWallet.test.tsx # Test for CreateWallet page
+│       CreateWallet.tsx # Page for creating wallet
+│       Home.tsx # Home page
+│       NotFound.tsx # 404 page
+│       RefundTickets.tsx # Page for refunding tickets back to organiser
+│
+└───test
+        testutils.tsx # Utility functions for testing (State and context injection (instead of mocking))
 ```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
