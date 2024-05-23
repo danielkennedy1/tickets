@@ -2,7 +2,7 @@ import { TextEncoder } from 'util';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Web3 } from 'web3';
 
-// Test-specific setup, because Jest is the worst and I don't respect it
+// Test-specific setup, because Jest is full of footguns and I don't respect it
 if (process.env.JEST_WORKER_ID !== undefined) {
     global.TextEncoder = TextEncoder;
 }

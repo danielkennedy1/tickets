@@ -1,8 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { useWeb3 } from '../contexts/Web3Provider';
+import { WalletInfo, useWeb3 } from '../contexts/Web3Provider';
 import ConnectWalletButton from '../components/ConnectWalletButton';
 import { ABI, ADDRESS } from '../assets/contract';
 import ErrorMessage from '../components/ErrorMessage';
+
+export const getIsUsher = async (contract: any, walletInfo: WalletInfo): Promise<boolean> => {
+    try {
+        const result: string = await contract.methods.usher().call();
+        return walletInfo!.address == result;
+    } catch (error) {
+        console.error('Error calling usher method:', error);
+        return false;
+    }
+};
+
+export const getIsOrganiser = async (contract: any, walletInfo: WalletInfo) => {
+    try {
+        const result: string = await contract.methods.organiser().call();
+        console.log(result);
+        return walletInfo!.address == result;
+    } catch (error) {
+        console.error('Error calling usher method:', error);
+        return false;
+    }
+}
+
+
 
 const CheckBalance: React.FC = () => {
     const { web3, walletInfo } = useWeb3();
@@ -25,26 +48,6 @@ const CheckBalance: React.FC = () => {
     const [patronAddress, setPatronAddress] = useState<string>('');
     const [error, setError] = useState<string>('');
 
-    const getIsUsher = async (contract: any) => {
-        await contract.methods.usher().call().then(
-            (result: string) => {
-                if (walletInfo!.address === result) {
-                    setRole(Role.Usher);
-                }
-            }
-        );
-    }
-
-    const getIsOrganiser = async (contract: any) => {
-        await contract.methods.organiser().call().then(
-            (result: string) => {
-                if (walletInfo!.address === result) {
-                    setRole(Role.Organiser);
-                }
-            }
-        );
-    }
-
     const getTotalSupply = async (contract: any) => {
         await contract.methods.totalSupply().call().then((result: number) => {
             setTotalSupply(result.toString());
@@ -56,8 +59,19 @@ const CheckBalance: React.FC = () => {
         if (web3) {
             const contract = new web3.eth.Contract(ABI, ADDRESS);
             setContract(contract);
-            getIsUsher(contract);
-            getIsOrganiser(contract);
+
+            getIsUsher(contract, walletInfo).then((result) => {
+                if (result) {
+                    setRole(Role.Usher);
+                }
+            });
+
+            getIsOrganiser(contract, walletInfo).then((result) => {
+                if (result) {
+                    setRole(Role.Organiser);
+                }
+            });
+
         }
     }, [web3]);
 
@@ -122,8 +136,9 @@ const CheckBalance: React.FC = () => {
         const signedTx = await web3!.eth.accounts.signTransaction(tx, walletInfo!.privateKey);
         setLoading(true)
         await web3!.eth.sendSignedTransaction(signedTx.rawTransaction || '').catch(
-            (error) => { 
-                setError((error as any).message) }
+            (error) => {
+                setError((error as any).message)
+            }
         );
         setLoading(false)
     }
@@ -131,7 +146,7 @@ const CheckBalance: React.FC = () => {
     return (
         <>
             <div className="flex flex-col items-center justify-center pt-36">
-                {error && ( <ErrorMessage error={error} /> )}
+                {error && (<ErrorMessage error={error} />)}
                 {walletInfo ? (
                     <>
                         {role === Role.Patron ? (

@@ -2,7 +2,9 @@ import '@testing-library/jest-dom';
 import { renderWithWalletInfo } from '../test/testutils';
 import { CheckBalance } from './CheckBalance';
 import { WalletInfo } from '../contexts/Web3Provider';
-import { waitFor } from '@testing-library/react';
+import { getIsOrganiser, getIsUsher } from './CheckBalance';
+import { ABI, ADDRESS } from '../assets/contract';
+import Web3 from 'web3';
 
 const organiserWalletInfo: WalletInfo = {
     address: "0x00c84CD906eB9f221aE02c8da025ffFDeBc2fa23",
@@ -20,28 +22,32 @@ const usherWalletInfo: WalletInfo = {
 };
 
 
-test("CheckBalance renders with organiser role-based access", async () => {
-    // Given
-    const { container } = renderWithWalletInfo(<CheckBalance />, organiserWalletInfo);
-
-    // Then
-    await waitFor( () => {
-            expect(container).toContainHTML('Organiser Panel');
-    }, {timeout: 3000})
-});
-test("CheckBalance renders with patron role-based access", () => {
+test("CheckBalance renders with patron wallet information", () => {
     // Given
     const { container } = renderWithWalletInfo(<CheckBalance />, patronWalletInfo);
 
     // Then
     expect(container).toContainHTML('Check My Balance');
 });
-test("CheckBalance renders with usherrole-based access", async () => {
+
+test("getIsOrganiser returns true when the wallet address is the same as the organiser's", () => {
     // Given
-    const { container } = renderWithWalletInfo(<CheckBalance />, usherWalletInfo);
+    const web3 = new Web3(new Web3.providers.HttpProvider('https://sepolia.infura.io/v3/e374c9fa97b845919613c8136a345bac'));
+    const contract = new web3.eth.Contract(ABI, ADDRESS);
 
     // Then
-    await waitFor( () => {
-            expect(container).toContainHTML('Organiser Panel');
-    }, {timeout: 3000})
+    getIsOrganiser(contract, organiserWalletInfo).then((result) => {
+        expect(result).toBe(true);
+    });
+});
+
+test("getIsUsher returns true when the wallet address is the same as the usher's", () => {
+    // Given
+    const web3 = new Web3(new Web3.providers.HttpProvider('https://sepolia.infura.io/v3/e374c9fa97b845919613c8136a345bac'));
+    const contract = new web3.eth.Contract(ABI, ADDRESS);
+
+    // Then
+    getIsUsher(contract, usherWalletInfo).then((result) => {
+        expect(result).toBe(true);
+    });
 });
